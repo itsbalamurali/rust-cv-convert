@@ -285,13 +285,13 @@ macro_rules! impl_from_array {
 
         impl<const N: usize> FromCv<&[$elem; N]> for tch::Tensor {
             fn from_cv(from: &[$elem; N]) -> Self {
-                Self::of_slice(from.as_ref())
+                Self::from_slice(from.as_ref())
             }
         }
 
         impl<const N1: usize, const N2: usize> FromCv<&[[$elem; N2]; N1]> for tch::Tensor {
             fn from_cv(from: &[[$elem; N2]; N1]) -> Self {
-                Self::of_slice(from.flat()).view([N1 as i64, N2 as i64])
+                Self::from_slice(from.flat()).view([N1 as i64, N2 as i64])
             }
         }
 
@@ -299,7 +299,7 @@ macro_rules! impl_from_array {
             for tch::Tensor
         {
             fn from_cv(from: &[[[$elem; N3]; N2]; N1]) -> Self {
-                Self::of_slice(from.flat().flat()).view([N1 as i64, N2 as i64, N3 as i64])
+                Self::from_slice(from.flat().flat()).view([N1 as i64, N2 as i64, N3 as i64])
             }
         }
 
@@ -307,7 +307,7 @@ macro_rules! impl_from_array {
             FromCv<&[[[[$elem; N4]; N3]; N2]; N1]> for tch::Tensor
         {
             fn from_cv(from: &[[[[$elem; N4]; N3]; N2]; N1]) -> Self {
-                Self::of_slice(from.flat().flat().flat())
+                Self::from_slice(from.flat().flat().flat())
                     .view([N1 as i64, N2 as i64, N3 as i64, N4 as i64])
             }
         }
@@ -321,7 +321,7 @@ macro_rules! impl_from_array {
             > FromCv<&[[[[[$elem; N5]; N4]; N3]; N2]; N1]> for tch::Tensor
         {
             fn from_cv(from: &[[[[[$elem; N5]; N4]; N3]; N2]; N1]) -> Self {
-                Self::of_slice(from.flat().flat().flat().flat())
+                Self::from_slice(from.flat().flat().flat().flat())
                     .view([N1 as i64, N2 as i64, N3 as i64, N4 as i64, N5 as i64])
             }
         }
@@ -336,7 +336,7 @@ macro_rules! impl_from_array {
             > FromCv<&[[[[[[$elem; N6]; N5]; N4]; N3]; N2]; N1]> for tch::Tensor
         {
             fn from_cv(from: &[[[[[[$elem; N6]; N5]; N4]; N3]; N2]; N1]) -> Self {
-                Self::of_slice(from.flat().flat().flat().flat().flat()).view([
+                Self::from_slice(from.flat().flat().flat().flat().flat()).view([
                     N1 as i64, N2 as i64, N3 as i64, N4 as i64, N5 as i64, N6 as i64,
                 ])
             }
@@ -407,6 +407,7 @@ impl_from_array!(i16);
 impl_from_array!(i32);
 impl_from_array!(i64);
 impl_from_array!(half::f16);
+impl_from_array!(half::bf16);
 impl_from_array!(f32);
 impl_from_array!(f64);
 impl_from_array!(bool);
@@ -417,8 +418,7 @@ mod tensor_as_image {
 
     /// An 2D image [Tensor](tch::Tensor) with dimension order.
     #[derive(Debug)]
-    pub struct TchTensorAsImage
-    {
+    pub struct TchTensorAsImage {
         pub(crate) tensor: tch::Tensor,
         pub(crate) kind: TchTensorImageShape,
     }
@@ -432,8 +432,7 @@ mod tensor_as_image {
         Cwh,
     }
 
-    impl TchTensorAsImage
-    {
+    impl TchTensorAsImage {
         pub fn new(tensor: tch::Tensor, kind: TchTensorImageShape) -> Result<Self> {
             let ndim = tensor.dim();
             ensure!(

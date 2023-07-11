@@ -140,7 +140,7 @@ impl<'a> TryFromCv<&'a cv::Mat> for OpenCvMatAsTchTensor<'a> {
 
         let tensor = unsafe {
             let ptr = from.ptr(0)? as *const u8;
-            tch::Tensor::f_of_blob(ptr, &shape, &strides, kind, tch::Device::Cpu)?
+            tch::Tensor::f_from_blob(ptr, &shape, &strides, kind, tch::Device::Cpu)?
         };
 
         Ok(Self {
@@ -172,7 +172,7 @@ impl TryFromCv<&cv::Mat> for TchTensorAsImage {
             let ptr = from.ptr(0)? as *const u8;
             let slice_size = (height * width * channels) as usize * kind.elt_size_in_bytes();
             let slice = slice::from_raw_parts(ptr, slice_size);
-            tch::Tensor::f_of_data_size(slice, &[height, width, channels], kind)?
+            tch::Tensor::f_from_data_size(slice, &[height, width, channels], kind)?
         };
 
         Ok(TchTensorAsImage {
@@ -208,7 +208,7 @@ impl TryFromCv<&cv::Mat> for tch::Tensor {
             let slice_size =
                 shape.iter().cloned().product::<i64>() as usize * kind.elt_size_in_bytes();
             let slice = slice::from_raw_parts(ptr, slice_size);
-            tch::Tensor::f_of_data_size(slice, shape.as_ref(), kind)?
+            tch::Tensor::f_from_data_size(slice, shape.as_ref(), kind)?
         };
 
         Ok(tensor)
@@ -341,7 +341,7 @@ mod tests {
                             .cloned()
                             .map(|val| Some(Tensor::from(val)))
                             .collect();
-                        let tch_val: f32 = before.f_index(&tch_index)?.into();
+                        let tch_val: f32 = before.f_index(&tch_index)?.try_into().unwrap();
                         let mat_val: f32 = *mat.at_nd(&cv_index)?;
                         ensure!(tch_val == mat_val, "value mismatch");
                         Ok(())
@@ -373,12 +373,18 @@ mod tests {
                 for col in 0..width {
                     let pixel: &cv::Vec3f = mat.at_2d(row as i32, col as i32)?;
                     let [red, green, blue] = **pixel;
-                    ensure!(f32::from(before.i((0, row, col))) == red, "value mismatch");
                     ensure!(
-                        f32::from(before.i((1, row, col))) == green,
+                        f32::try_from(before.i((0, row, col))).unwrap() == red,
                         "value mismatch"
                     );
-                    ensure!(f32::from(before.i((2, row, col))) == blue, "value mismatch");
+                    ensure!(
+                        f32::try_from(before.i((1, row, col))).unwrap() == green,
+                        "value mismatch"
+                    );
+                    ensure!(
+                        f32::try_from(before.i((2, row, col))).unwrap() == blue,
+                        "value mismatch"
+                    );
                 }
             }
 

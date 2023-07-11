@@ -61,99 +61,8 @@ default-features = true
 features = []
 optional = true
 
-[dependencies.opencv_0-63]
-version = '0.63'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-64]
-version = '0.64'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-65]
-version = '0.65'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-66]
-version = '0.66'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-67]
-version = '0.67'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-68]
-version = '0.68'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-69]
-version = '0.69'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-70]
-version = '0.70'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-71]
-version = '0.71'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-72]
-version = '0.72'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-73]
-version = '0.73'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-74]
-version = '0.74'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-75]
-version = '0.75'
-package = 'opencv'
-default-features = false
-features = ['calib3d']
-optional = true
-
-[dependencies.opencv_0-76]
-version = '0.76'
+[dependencies.opencv_0-81-5]
+version = '0.81.5'
 package = 'opencv'
 default-features = false
 features = ['calib3d']
@@ -166,8 +75,8 @@ default-features = true
 features = []
 optional = true
 
-[dependencies.tch_0-10]
-version = '0.10'
+[dependencies.tch_0-13]
+version = '0.13'
 package = 'tch'
 default-features = true
 features = []

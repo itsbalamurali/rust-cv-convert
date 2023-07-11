@@ -14,8 +14,11 @@ mod with_image_0_23 {
         fn from_cv(from: &image::ImageBuffer<P, Container>) -> Self {
             let (width, height) = from.dimensions();
             let channels = P::CHANNEL_COUNT;
-            let tensor =
-                tch::Tensor::of_slice(&*from).view([width as i64, height as i64, channels as i64]);
+            let tensor = tch::Tensor::from_slice(&*from).view([
+                width as i64,
+                height as i64,
+                channels as i64,
+            ]);
             TchTensorAsImage {
                 tensor,
                 kind: TchTensorImageShape::Whc,
@@ -78,8 +81,11 @@ mod with_image_0_24 {
         fn from_cv(from: &image::ImageBuffer<P, Container>) -> Self {
             let (width, height) = from.dimensions();
             let channels = P::CHANNEL_COUNT;
-            let tensor =
-                tch::Tensor::of_slice(&*from).view([width as i64, height as i64, channels as i64]);
+            let tensor = tch::Tensor::from_slice(&*from).view([
+                width as i64,
+                height as i64,
+                channels as i64,
+            ]);
             TchTensorAsImage {
                 tensor,
                 kind: TchTensorImageShape::Whc,

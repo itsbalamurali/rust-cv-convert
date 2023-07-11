@@ -1,0 +1,48 @@
+name: Generate and release
+on:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Clang & OpenCV dependencies
+      run: sudo apt install libopencv-dev clang libclang-dev lldb lld llvm-dev llvm curl cmake unzip --no-install-recommends -y
+    - uses: Swatinem/rust-cache@v2
+      with:
+        cache-on-failure: true
+    - name: Install Libtorch
+      env:
+        LIBTORCH_URL: https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.0.1%2Bcpu.zip
+      run: |
+        curl -fsSL --insecure -o libtorch.zip  $LIBTORCH_URL \
+            && unzip -q libtorch.zip \
+            && rm libtorch.zip
+
+    - name: Run Generate
+      run: make generate
+    # - name: Copy generated Cargo.toml
+    #   working-directory: cv-convert
+    #   run: |
+    # TODO use sed to replace the content of Cargo.toml
+    # sed -e "s/## Start of generated dependencies.*## End of generated dependencies/1\ Cargo.toml.snipplet \2/g" Cargo.toml
+    - name: Run tests
+      env:
+        LIBTORCH: ${{ github.workspace }}/libtorch
+        LIBTORCH_BYPASS_VERSION_CHECK: 1
+        CC: /usr/bin/clang-14
+        CPP: /usr/bin/clang-cpp-14
+        CXX: /usr/bin/clang++-14
+        # LD: /usr/bin/ld.lld-14
+      run: make test
+    - name: Output
+      if: ${{ always() }}
+      run: |
+        cat stderr.txt
+        cat stdout.txt
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5

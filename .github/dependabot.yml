@@ -1,0 +1,15 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: cargo
+    directory: "/cv-convert"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: cargo
+    directory: "/cv-convert-generate"
+    schedule:
+      interval: "weekly"
