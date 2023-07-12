@@ -22,7 +22,7 @@ jobs:
         curl -fsSL --insecure -o libtorch.zip  $LIBTORCH_URL \
             && unzip -q libtorch.zip \
             && rm libtorch.zip
-        ls -la
+        ls -la libtorch
     - name: Run Generate
       run: make generate
     # - name: Copy generated Cargo.toml
