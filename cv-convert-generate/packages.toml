@@ -1,10 +1,10 @@
 [package.image]
-versions = ["0.23", "0.24"]
+versions = ["0.24"]
 use_default_features = true
 features = []
 
 [package.nalgebra]
-versions = ["0.26", "0.27", "0.28", "0.29", "0.30", "0.31", "0.32"]
+versions = ["0.32"]
 use_default_features = true
 features = []
 
